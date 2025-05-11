@@ -10,15 +10,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Read the raw body
-    let body = '';
-    for await (const chunk of req) {
-      body += chunk;
-    }
-
     // Parse it safely
-    const parsed = JSON.parse(body);
-    const userPrompt = parsed.prompt || 'I need a creative reset.';
+    const userPrompt = 'I need a creative reset.';
 
     if (!process.env.OPENAI_API_KEY) {
       return res.status(500).json({ error: 'Missing OpenAI API key' });
