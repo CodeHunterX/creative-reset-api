@@ -10,11 +10,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt = 'I need a creative reset.' } = req.body || {};
+    // Read the raw body
+    let body = '';
+    for await (const chunk of req) {
+      body += chunk;
+    }
+
+    // Parse it safely
+    const parsed = JSON.parse(body);
+    const userPrompt = parsed.prompt || 'I need a creative reset.';
 
     if (!process.env.OPENAI_API_KEY) {
-      console.error('❌ OPENAI_API_KEY not found in env');
-      return res.status(500).json({ error: 'OpenAI API key missing' });
+      return res.status(500).json({ error: 'Missing OpenAI API key' });
     }
 
     const completion = await openai.chat.completions.create({
@@ -25,14 +32,18 @@ export default async function handler(req, res) {
           content:
             'You are a mindfulness coach for busy creatives (artists, writers, and developers). Offer short, calming guidance to help them reset and refresh their creativity.',
         },
-        { role: 'user', content: prompt },
+        {
+          role: 'user',
+          content: userPrompt,
+        },
       ],
     });
 
-    const reply = completion.choices[0].message.content;
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply: completion.choices[0].message.content.trim(),
+    });
   } catch (err) {
     console.error('❌ Error during OpenAI call:', err);
-    return res.status(500).json({ error: 'Failed to generate prompt' });
+    return res.status(500).json({ error: 'Invalid JSON or OpenAI error' });
   }
 }
