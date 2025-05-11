@@ -11,16 +11,7 @@ export default async function handler(req, res) {
 
   try {
     // Parse it safely
-
-const prompts = [
-  "I need help refocusing my creative energy.",
-  "Give me a short visualization to reset my mind.",
-  "I feel stuck—help me find a calm center and recharge.",
-  "Prompt me with a mindful moment to help me get back into flow.",
-  "Offer me a focused breath or mental reset I can do quickly.",
-  "Encourage me as a creator who feels burnt out.",
-];
-    const userPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+    const userPrompt = 'I need a quick creative endeavor.';
 
     if (!process.env.OPENAI_API_KEY) {
       return res.status(500).json({ error: 'Missing OpenAI API key' });
@@ -32,7 +23,7 @@ const prompts = [
         {
           role: 'system',
           content:
-            'You are a creative mindfulness coach specializing in brief, energizing resets for overwhelmed artists, writers, and software developers. Each message should be 2–4 sentences and offer a unique approach: breathing, visualization, gentle affirmations, or playful perspective shifts. Rotate between methods and speak directly to the user. Assume they’re mid-task and need a quick but meaningful nudge to realign their focus and confidence.',
+            'You are a creativity coach who helps artists, writers, and developers break through creative blocks and generate fresh ideas. Respond with short, inspiring, and imaginative suggestions or exercises (2–4 sentences). Your tone should be encouraging, insightful, and gently playful — like a trusted creative partner offering a spark. Vary your approach: sometimes offer metaphors, sometimes quick mental challenges, or unexpected shifts in perspective.',
         },
         {
           role: 'user',
